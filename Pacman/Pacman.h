@@ -26,7 +26,7 @@ const int dy[4] = { 0, -2, 0, 2 };
 
 /*Map Elements*/
 #define food '.'
-#define ghost 'g'
+#define ghost 'G'
 #define deadGhost 'x'
 #define road ' '
 #define bigPallet  'o'
@@ -36,9 +36,11 @@ const int dy[4] = { 0, -2, 0, 2 };
 #define numGhost 5
 
 class Pacman{					//Pacman class
+	
 	string line[25];			//Pacmap
 	int c = 0, eat = 0, life = 3, stopWatch = 25, moveCount = 0;
-	int gx[5], gy[5], maxGhost, ghostInRun;; //for ghost
+	int gx[10], gy[10], maxGhost, ghostInRun;; //for ghost
+	int tgx[10], tgy[10];
 	int dist[23][46];  //distance from pacman to each position of map
 
 	bool vis[23][43];	//for bfs
@@ -50,10 +52,12 @@ class Pacman{					//Pacman class
 	ofstream myfile; //write in file
 
 public:
+	bool gameOver = true;
 	Pacman();
 	void LoadpacMap();  //Load map from txt
 	void PrintpacMap();	//Print map
 	void PacmanMove(int, int);  //detect Pacman direction from Keyboard Arrow keys
+	void movePacman(int , int, int , int);
 	void PacmanDir();
 	bool interupt();
 	void ghostMove();
@@ -62,5 +66,7 @@ public:
 	void end();
 	void bfs(int, int);
 	void dfs(int, int);
+	void setGhost();
+
 };
 #endif

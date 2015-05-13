@@ -4,16 +4,47 @@
 Pacman::Pacman(){  //constructor
 	for (int i = 0; i < 4; i++)tmp[i] = road;
 	myfile.open("example1.txt");
+	
+}
+void Pacman::setGhost(){
+	for (int i = 0; i < maxGhost; i++){
+		line[gx[i]][gy[i]] = tmp[i];
+		gx[i] = tgx[i];
+		gy[i] = tgy[i];
+		line[gx[i]][gy[i]] = 'G';
+	}
+	line[15][11] = 'P';
 }
 void Pacman::reset(){ //reset if pacman and ghost in same position
-	for (int i = 0; i < 5; i++)gx[i] = 0, gy[i] = 0;
-	system("CLS");
-	LoadpacMap();
-	PrintpacMap();
+	if (life >= 0){
+		Sleep(100);
+		setGhost();
+		system("CLS");
+		PrintpacMap();
+		Sleep(200);
+	}
+	else{
+		end();
+	}
 }
 void Pacman::end(){  //If no life left
 	system("CLS");
-	cout << "Game Over!"<< endl;
+	cout << "\tGame Over!"<< endl;
+	cout << endl;
+	cout << "\tTo Play Again Enter C: C" << endl;
+	cout << "\tTo End The Game Enter E: E" << endl;
+	char ch;
+	cin >> ch;
+	if (ch == 'c' || ch == 'C'){
+		life = 3;
+		stopWatch = 25;
+		system("CLS");
+		LoadpacMap();
+		PrintpacMap();
+	}
+	else
+		gameOver = false;
+
 }
 
 bool Pacman::valid(int r, int c){  //if current row column is inside the grid
@@ -22,7 +53,7 @@ bool Pacman::valid(int r, int c){  //if current row column is inside the grid
 }
 void Pacman::LoadpacMap(){
 	ifstream in;
-	
+
 	in.open("test.txt"); //opening the pacmap txt
 	if (in.is_open())
 	{
@@ -35,12 +66,15 @@ void Pacman::LoadpacMap(){
 	}
 	else
 		cout << "Can't open file!" << endl; //if pacmap does not available
+
+	/*Taking ghost position*/
 	int a = 0, b = 0;
-	for (int i = 0; i<21; i++)
-	for (int j = 0; j < 45; j++) if (line[i][j] == ghost){ gx[a++] = i, gy[b++] = j; }  //find the Ghost
+	for (int i = 0; i < 21; i++)
+	for (int j = 0; j < 45; j++) if (line[i][j] == ghost){ tgx[a++] = i, tgy[b++] = j; }  //find the Ghost
 	maxGhost = a;
 	for (int i = 0; i < maxGhost; i++){
-		myfile << gx[i] << " " << gy[i] << endl;
+		gx[i] = tgx[i];
+		gy[i] = tgy[i];
 	}
 }
 
@@ -96,7 +130,7 @@ int main(){
 	pm.LoadpacMap();
 	pm.PrintpacMap();
 	//pm.bfs(15, 11); 
-	while (true){
+	while (pm.gameOver){
 		//Sleep(200);
 		pm.PacmanDir();
 	}

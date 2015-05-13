@@ -26,7 +26,7 @@ void Pacman::bfs(int x, int y){
 			int v = c + dy[i];
 
 			//myfile<<"Visiting: " << u << " " << v <<" "<<dist[u][v]<< endl;
-			if ((line[u][v] == ' ' || line[u][v] == '.' || line[u][v] == '-' || line[u][v] == 'o'||line[u][v]=='g') && vis[u][v] == false && valid(u, v) == true){
+			if ((line[u][v] == ' ' || line[u][v] == '.' || line[u][v] == '-' || line[u][v] == 'o'||line[u][v]==ghost) && vis[u][v] == false && valid(u, v) == true){
 				vis[u][v] = true;
 				dist[u][v] = dist[r][c] + 1;
 				q.push(u);

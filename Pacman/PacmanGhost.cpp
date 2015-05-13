@@ -11,8 +11,8 @@ void Pacman::ghostMove(){ //move ghost randomly
 	//cout << "Ghost found: "<<gx[0]<<" "<<gy[0] << endl;
 	
 	if (moveCount < 5) ghostInRun = 1;
-	else if (moveCount < 8) ghostInRun = 2;
-	else if (moveCount < 11) ghostInRun = 3;
+	else if (moveCount < 10) ghostInRun = 2;
+	else if (moveCount < 15) ghostInRun = 3;
 	else ghostInRun = maxGhost;
 
 	//myfile <<"Max Ghost: "<< maxGhost << endl;
