@@ -9,7 +9,6 @@ void Pacman::movePacman(int x, int y, int dx, int dy){
 
 		if (line[r][c] == ghost && pacPower == false){  //if pacman meets ghost and pacman has no power
 			life--;
-			line[x][y] = ' ';
 			Sleep(100);
 			reset(); //reset the map
 		}
