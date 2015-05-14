@@ -1,21 +1,31 @@
 #include "Pacman.h"
+#include <windows.h>
 void Pacman::movePacman(int x, int y, int dx, int dy){
 	int r = x + dx, c = y + dy; //new position of pacman
-
-	if (line[r][c] == road || line[r][c] == food || line[r][c] == ghost){ //if there is no obstacle in the path pacman moves up
+	//cout << "4: " << pacmanPower << endl;
+	if ((line[r][c] == road || line[r][c] == food || line[r][c] == ghost)&&valid(r,c)==true){ //if there is no obstacle in the path pacman moves up
 		line[x][y] = road;  // Eating the food in the way
 
+		cout << line[r][c] << " " << flag << endl;
 		if (line[r][c] == food)eat += 10; //adding 10 for eating food
 
-		if (line[r][c] == ghost && pacPower == false){  //if pacman meets ghost and pacman has no power
+		if (line[r][c] == ghost && flag == false){  //if pacman meets ghost and pacman has no power
 			life--;
 			Sleep(100);
 			reset(); //reset the map
 		}
+		else if (line[r][c] == ghost && flag == true){
+			line[x][y] = road;
+			eat += 200;
+			line[r][c] = 'P';
+			//system("CLS");		//Clear the console
+			PrintpacMap();		//print the updated pacman Map
+			cout << "From Here" << endl;
+		}
 		else{
 			line[r][c] = 'P';    //pacman new position
 			ghostMove();
-			system("CLS");		//Clear the console
+			//system("CLS");		//Clear the console
 			PrintpacMap();		//print the updated pacman Map
 		}
 		c = 0;
@@ -24,9 +34,12 @@ void Pacman::movePacman(int x, int y, int dx, int dy){
 		line[x][y] = road;
 		eat += 50;
 		line[r][c] = 'P';
-		pacPower = true;
+		pacmanPower = true;
+		flag = true;
+		Sleep(100);
 		system("CLS");
 		PrintpacMap();
+	//	timer();
 	}
 }
 void Pacman::PacmanMove(int dx, int dy){

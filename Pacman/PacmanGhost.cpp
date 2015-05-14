@@ -31,8 +31,8 @@ void Pacman::ghostMove(){ //move ghost randomly
 				}
 					
 			}
-			cout << minx << " " << miny << endl;
-			if (line[minx][miny] == 'P'&& pacPower!=true)
+		//	cout << minx << " " << miny << endl;
+			if (line[minx][miny] == 'P'&& valid(minx, miny)==true)
 				reset();
 			else{
 			//	cout << "pre: " <<i<<" "<< tmp[i];

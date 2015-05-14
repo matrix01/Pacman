@@ -1,4 +1,5 @@
 #include "Pacman.h"
+#include<queue>
 
 void Pacman::bfs(int x, int y){
 	for (int i = 0; i < 22; i++){
@@ -11,7 +12,7 @@ void Pacman::bfs(int x, int y){
 		vis[j][k] = false;
 	
 	queue<int> q;
-	myfile << "Pacman: " << x << " " << y << endl;
+//	myfile << "Pacman: " << x << " " << y << endl;
 	q.push(x);
 	q.push(y);
 	dist[x][y] = 0;
@@ -37,7 +38,7 @@ void Pacman::bfs(int x, int y){
 	}
 	
 
-	myfile << "After:" << endl;
+/*	myfile << "After:" << endl;
 	for (int i = 0; i < 22; i++){
 		for (int j = 0; j < 43; j++){
 			myfile << dist[i][j] << " ";
@@ -45,7 +46,7 @@ void Pacman::bfs(int x, int y){
 		myfile << endl;
 	}
 	myfile << "After Done!" << endl;
-	myfile.close();
+	myfile.close();*/
 }
 
 void Pacman::dfs(int x, int y){

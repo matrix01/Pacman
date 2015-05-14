@@ -1,27 +1,44 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "Pacman.h"
+#include<conio.h>
+using namespace std;
 
 Pacman::Pacman(){  //constructor
 	for (int i = 0; i < 4; i++)tmp[i] = road;
-	myfile.open("example1.txt");
-	
+//	myfile.open("example1.txt");
+
+	pacmanPower = false;
+	c=0; stopWatch=25; moveCount=0; life=3; eat=0; flag=false; gameOver=true; //Setting all initial values
+}
+void Pacman::timer(){
+	if (stopWatch>0 && flag==true)cout << "\tPower Left: " << stopWatch-- << endl;
+	else{
+		stopWatch = 25;
+		flag = false;
+	}
 }
 void Pacman::setGhost(){
+	//cout<<"1: " << pacmanPower << endl;
 	for (int i = 0; i < maxGhost; i++){
 		line[gx[i]][gy[i]] = tmp[i];
 		gx[i] = tgx[i];
 		gy[i] = tgy[i];
-		line[gx[i]][gy[i]] = 'G';
+		line[tgx[i]][tgy[i]] = 'G';
+	}
+	for(int i=0; i<5; i++)tmp[i]=' ';
+	for (int i = 1; i < 20; i++){
+		for (int j = 0; j < 45; j++){
+			if (line[i][j] == 'P')line[i][j] = road;
+		}
 	}
 	line[15][11] = 'P';
 }
 void Pacman::reset(){ //reset if pacman and ghost in same position
 	if (life >= 0){
-		Sleep(100);
+		moveCount = 0;
 		setGhost();
 		system("CLS");
 		PrintpacMap();
-		Sleep(200);
 	}
 	else{
 		end();
@@ -38,6 +55,7 @@ void Pacman::end(){  //If no life left
 	if (ch == 'c' || ch == 'C'){
 		life = 3;
 		stopWatch = 25;
+		flag = false;
 		system("CLS");
 		LoadpacMap();
 		PrintpacMap();
@@ -53,7 +71,7 @@ bool Pacman::valid(int r, int c){  //if current row column is inside the grid
 }
 void Pacman::LoadpacMap(){
 	ifstream in;
-
+	
 	in.open("test.txt"); //opening the pacmap txt
 	if (in.is_open())
 	{
@@ -70,7 +88,9 @@ void Pacman::LoadpacMap(){
 	/*Taking ghost position*/
 	int a = 0, b = 0;
 	for (int i = 0; i < 21; i++)
-	for (int j = 0; j < 45; j++) if (line[i][j] == ghost){ tgx[a++] = i, tgy[b++] = j; }  //find the Ghost
+	for (int j = 0; j < 45; j++) if (line[i][j] == ghost){ 
+		tgx[a++] = i; tgy[b++] = j; 
+	}  //find the Ghost
 	maxGhost = a;
 	for (int i = 0; i < maxGhost; i++){
 		gx[i] = tgx[i];
@@ -78,28 +98,20 @@ void Pacman::LoadpacMap(){
 	}
 }
 
-
-
 void Pacman::PrintpacMap(){  //Print the pacmap
 	for (int i = 0; i <= 20; i++)
 		cout << line[i] << endl;
 	cout << endl << endl;
 	cout << "           Life: "<<life << endl;
 	cout << "          Score: " << eat << endl;
-	if (pacPower == true && stopWatch > 0){
-		cout << "\tPower Left : " << stopWatch-- << endl;
-	}
-	else{
-		pacPower = false;
-		stopWatch = 25;
-	}
-	
+	timer();
 }
 
 void Pacman::PacmanDir(){
 		c = 0;
 		//cout << c << endl;
-		switch (c = _getch()) {  //using key values as case
+		c = _getch();
+		switch (c) {  //using key values as case
 		case KEY_UP:	//if key up pressed
 			//cout << c << endl;
 			PacmanMove(UP, 0);
