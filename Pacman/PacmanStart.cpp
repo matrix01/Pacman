@@ -6,9 +6,15 @@ using namespace std;
 Pacman::Pacman(){  //constructor
 	for (int i = 0; i < 4; i++)tmp[i] = road;
 //	myfile.open("example1.txt");
-
+	advanceLevel = 0;
+	levelOver = true;
 	pacmanPower = false;
 	c=0; stopWatch=25; moveCount=0; life=3; eat=0; flag=false; gameOver=true; //Setting all initial values
+}
+bool Pacman::eatCherry(int x, int y){
+	if (line[x][y] == 'C' || line[x][y] == 'H' || line[x][y] == 'E' || line[x][y] == 'R' || line[x][y] == 'R' || line[x][y] == 'Y')
+		return true;
+	return false;
 }
 void Pacman::timer(){
 	if (stopWatch>0 && flag==true)cout << "\tPower Left: " << stopWatch-- << endl;
@@ -54,6 +60,7 @@ void Pacman::end(){  //If no life left
 	cin >> ch;
 	if (ch == 'c' || ch == 'C'){
 		life = 3;
+		levelOver = false;
 		stopWatch = 25;
 		flag = false;
 		system("CLS");
@@ -96,6 +103,7 @@ void Pacman::LoadpacMap(){
 		gx[i] = tgx[i];
 		gy[i] = tgy[i];
 	}
+	cherry = 0;  //life increase
 }
 
 void Pacman::PrintpacMap(){  //Print the pacmap
@@ -139,12 +147,33 @@ void Pacman::PacmanDir(){
 
 int main(){
 	Pacman pm;
-	pm.LoadpacMap();
-	pm.PrintpacMap();
-	//pm.bfs(15, 11); 
-	while (pm.gameOver){
-		//Sleep(200);
-		pm.PacmanDir();
-	}
+	
+
+		
+		while (pm.gameOver){
+			//Sleep(200);
+
+			int levelSelection;
+			cout << "\t1. Basic Level\n\t2. Advance Level\n" << endl;
+			cin >> levelSelection;
+			switch (levelSelection)
+			{
+			case 1:
+				pm.advanceLevel = 0;
+				break;
+			case 2:
+				pm.advanceLevel = 1;
+				break;
+			default:
+				break;
+			}
+			system("CLS");
+			pm.LoadpacMap();
+			pm.PrintpacMap();
+			//pm.bfs(15, 11);
+			while (pm.levelOver){
+				pm.PacmanDir();
+			}
+		}
 	return 0;
 }
