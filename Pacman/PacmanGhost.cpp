@@ -56,7 +56,10 @@ void Pacman::ghostMove(){ //move ghost randomly
 				line[minx][miny] = 'P';
 				gx[i] = tgx[i];		//ghost respawn position
 				gy[i] = tgy[i];
-				//line[gx[i]][gx[i]] = ghost;
+				line[7][19] = ghost;
+				gx[i] = 7;
+				gy[i] = 19;
+				eat += 200;
 				system("CLS");
 				PrintpacMap();
 				cout << "Ghost eat pacman!" << endl;
