@@ -6,13 +6,12 @@ void Pacman::movePacman(int x, int y, int dx, int dy){
 	if ((line[r][c] == road || line[r][c] == food || line[r][c] == ghost ||eatCherry(r,c)==true)&&valid(r,c)==true){ //if there is no obstacle in the path pacman moves up
 		line[x][y] = road;  // Eating the food in the way
 
-		cout << line[r][c] << " " << flag << endl;
 		if (line[r][c] == food)eat += 10; //adding 10 for eating food
 
-		if (eatCherry(r, c) == true){
-			cherry++;
-			line[r][c] = 'P';
-			if (cherry == 5){
+		if (eatCherry(r, c) == true){		//if pacman eat a cherry
+			cherry++;						//cherry count increase
+			line[r][c] = 'P';		
+			if (cherry == 5){		//if all 5 letter eaten life increases
 				life++;
 				cherry = 0;
 			}
@@ -27,6 +26,7 @@ void Pacman::movePacman(int x, int y, int dx, int dy){
 			line[x][y] = road;
 			eat += 200;
 			line[r][c] = 'P';
+			line[9][19] = ghost;
 			system("CLS");		//Clear the console
 			PrintpacMap();		//print the updated pacman Map
 			cout << "From Here" << endl;
@@ -75,11 +75,12 @@ void Pacman::PacmanMove(int dx, int dy){
 		movePacman(x, y, dx, dy);
 	}
 	else if (dy == -2 && dx == 0){  //Left Move
-		if (x == 9 && y == 1) {
+		if (x == 9 && y == 3) {
 			y = 43;
-			line[x][1] = ' ';
+			line[x][3] = ' ';
 			line[x][43] = 'P';
 		}
+		else
 		movePacman(x, y, dx, dy);
 	}
 	else if (dy == 2 && dx == 0){  //Right Move

@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "Pacman.h"
-#include<conio.h>
+#include <conio.h>
 using namespace std;
 
 Pacman::Pacman(){  //constructor
@@ -40,7 +40,7 @@ void Pacman::setGhost(){
 	line[15][11] = 'P';
 }
 void Pacman::reset(){ //reset if pacman and ghost in same position
-	if (life >= 0){
+	if (life >= 1){
 		moveCount = 0;
 		setGhost();
 		system("CLS");
@@ -104,6 +104,7 @@ void Pacman::LoadpacMap(){
 		gy[i] = tgy[i];
 	}
 	cherry = 0;  //life increase
+	respawn = 0;
 }
 
 void Pacman::PrintpacMap(){  //Print the pacmap
@@ -147,12 +148,9 @@ void Pacman::PacmanDir(){
 
 int main(){
 	Pacman pm;
-	
-
-		
 		while (pm.gameOver){
 			//Sleep(200);
-
+			system("CLS");
 			int levelSelection;
 			cout << "\t1. Basic Level\n\t2. Advance Level\n" << endl;
 			cin >> levelSelection;
@@ -160,9 +158,11 @@ int main(){
 			{
 			case 1:
 				pm.advanceLevel = 0;
+				pm.levelOver = true;
 				break;
 			case 2:
 				pm.advanceLevel = 1;
+				pm.levelOver = true;
 				break;
 			default:
 				break;
