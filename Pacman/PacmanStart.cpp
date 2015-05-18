@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "Pacman.h"
 #include <conio.h>
+#include <queue>
 using namespace std;
 
 Pacman::Pacman(){  //constructor
@@ -8,8 +9,12 @@ Pacman::Pacman(){  //constructor
 //	myfile.open("example1.txt");
 	advanceLevel = 0;
 	levelOver = true;
-	pacmanPower = false;
+
 	c=0; stopWatch=25; moveCount=0; life=3; eat=0; flag=false; gameOver=true; //Setting all initial values
+}
+bool Pacman::ghostCheck(int x, int y){
+	if (line[x][y] == ghost || line[x][y] == deadGhost)return true;
+	else return false;
 }
 bool Pacman::eatCherry(int x, int y){
 	if (line[x][y] == 'C' || line[x][y] == 'H' || line[x][y] == 'E' || line[x][y] == 'R' || line[x][y] == 'R' || line[x][y] == 'Y')
@@ -21,20 +26,29 @@ void Pacman::timer(){
 	else{
 		stopWatch = 25;
 		flag = false;
+		pacGhost = ghost;
 	}
 }
 void Pacman::setGhost(){
 	//cout<<"1: " << pacmanPower << endl;
-	for (int i = 0; i < maxGhost; i++){
-		line[gx[i]][gy[i]] = tmp[i];
-		gx[i] = tgx[i];
-		gy[i] = tgy[i];
-		line[tgx[i]][tgy[i]] = 'G';
+	queue<ghostP> tg=gq;
+	while (!gq.empty())gq.pop();
+	int a = 0;
+	while (!tg.empty()){
+		cout << "crash here" << endl;
+		ghostP pg = tg.front(); tg.pop();
+		line[pg.r][pg.c] = pg.prev;
+		line[gx[a]][gy[a]] = ghost;
+		pg.r = gx[a];
+		pg.c = gy[a];
+		pg.prev = ' ';
+		gq.push(pg);
+		a++;
 	}
-	for(int i=0; i<5; i++)tmp[i]=' ';
+	cout << a << endl;
 	for (int i = 1; i < 20; i++){
 		for (int j = 0; j < 45; j++){
-			if (line[i][j] == 'P')line[i][j] = road;
+			if (line[i][j] == pacman)line[i][j] = road;
 		}
 	}
 	line[15][11] = 'P';
@@ -61,14 +75,28 @@ void Pacman::end(){  //If no life left
 	if (ch == 'c' || ch == 'C'){
 		life = 3;
 		levelOver = false;
+		while (!gq.empty())gq.pop();
+		for (int i = 0; i < 21; i++)
+		for (int j = 0; j < 46; j++){
+			vis[i][j] = false;
+			dist[i][j] = 10000;
+			visited1[i][j] = false;
+			line[i][j] = ' ';
+		}
+		for (int i = 0; i < 10; i++){
+			gx[i] = 0; gy[i] = 0;
+			tmp[i] = ' ';
+		}
 		stopWatch = 25;
 		flag = false;
-		system("CLS");
+	//	system("CLS");
 		LoadpacMap();
-		PrintpacMap();
+		//PrintpacMap();
 	}
-	else
+	else{
+		levelOver = false;
 		gameOver = false;
+	}
 
 }
 
@@ -93,18 +121,21 @@ void Pacman::LoadpacMap(){
 		cout << "Can't open file!" << endl; //if pacmap does not available
 
 	/*Taking ghost position*/
-	int a = 0, b = 0;
+	ghostP gp;
+	int a = 0;
+	while (!gq.empty())gq.pop();
 	for (int i = 0; i < 21; i++)
 	for (int j = 0; j < 45; j++) if (line[i][j] == ghost){ 
-		tgx[a++] = i; tgy[b++] = j; 
+		gp.r = i;
+		gp.c = j;
+		gp.prev = ' ';
+		gq.push(gp); //storing ghost in queue
+		gx[a] = i;
+		gy[a++] = j;
 	}  //find the Ghost
-	maxGhost = a;
-	for (int i = 0; i < maxGhost; i++){
-		gx[i] = tgx[i];
-		gy[i] = tgy[i];
-	}
+	cout <<"Size: "<< a << " "<<gq.size()<<endl;
 	cherry = 0;  //life increase
-	respawn = 0;
+	pacGhost = ghost;  //Set the 'G' as ghost when pacman has no pawer;
 }
 
 void Pacman::PrintpacMap(){  //Print the pacmap
@@ -150,7 +181,7 @@ int main(){
 	Pacman pm;
 		while (pm.gameOver){
 			//Sleep(200);
-			system("CLS");
+			//system("CLS");
 			int levelSelection;
 			cout << "\t1. Basic Level\n\t2. Advance Level\n" << endl;
 			cin >> levelSelection;
@@ -165,9 +196,10 @@ int main(){
 				pm.levelOver = true;
 				break;
 			default:
+
 				break;
 			}
-			system("CLS");
+			//system("CLS");
 			pm.LoadpacMap();
 			pm.PrintpacMap();
 			//pm.bfs(15, 11);
